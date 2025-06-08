@@ -1,23 +1,32 @@
 services:
-  nginx:
-    image: nginx:latest
-    container_name: reverse_proxy
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./public_html:/var/www/public_html
-    depends_on:
-      - application
-    restart: always
-
-  application:
+  # Next.js Application
+  nextjs-app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: application
+    container_name: calora-nextjs
     ports:
       - "3000:3000"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - calora-network
+
+  # nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: calora-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
     volumes:
-      - ./:/app
-    command: "npm run dev"
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - nextjs-app
+    networks:
+      - calora-network
+
+networks:
+  calora-network:
+    driver: bridge

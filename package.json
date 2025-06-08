@@ -2,12 +2,12 @@
   "name": "calora-app-next",
   "version": "0.1.0",
   "private": true,
+  
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
+  "dev": "next dev --turbo=false",
+  "build": "next build",
+  "start": "next start"
+},
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

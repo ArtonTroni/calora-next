@@ -10,9 +10,9 @@ env:
   NODE_VERSION: '18'
 
 jobs:
-  # Job 1: Code Quality (tolerant)
+  # Job 1: Code Quality 
   lint-and-typecheck:
-    name: 🔍 Code Quality
+    name: Code Quality
     runs-on: ubuntu-latest
     
     steps:
@@ -30,19 +30,19 @@ jobs:
       
       - name: Run ESLint (tolerant)
         run: |
-          echo "🔍 Running ESLint..."
-          npm run lint || echo "⚠️ ESLint found issues (ignored for LAB_08)"
-          echo "✅ Code Quality check completed"
+          echo "Running ESLint..."
+          npm run lint || echo "ESLint found issues (ignored for LAB_08)"
+          echo "Code Quality check completed"
       
       - name: TypeScript type check (tolerant)
         run: |
-          echo "🔍 Running TypeScript check..."
-          npm run type-check || echo "⚠️ TypeScript found issues (ignored for LAB_08)"
-          echo "✅ Type check completed"
+          echo "Running TypeScript check..."
+          npm run type-check || echo "TypeScript found issues (ignored for LAB_08)"
+          echo "Type check completed"
 
-  # Job 2: Unit Tests (tolerant)
+  # Job 2: Unit Tests
   unit-tests:
-    name: 🧪 Unit Tests
+    name: Unit Tests
     runs-on: ubuntu-latest
     
     steps:
@@ -60,15 +60,15 @@ jobs:
       
       - name: Run unit tests (tolerant)
         run: |
-          echo "🧪 Running unit tests..."
-          npm run test:unit || echo "⚠️ Some unit tests failed (acceptable for LAB_08)"
-          echo "✅ Unit tests completed"
+          echo "Running unit tests..."
+          npm run test:unit || echo "Some unit tests failed (acceptable for LAB_08)"
+          echo "Unit tests completed"
         env:
           NODE_ENV: test
 
-  # Job 3: API System Tests (tolerant)
+  # Job 3: API System Tests
   api-tests:
-    name: 🏗️ API System Tests
+    name: API System Tests
     runs-on: ubuntu-latest
     
     steps:
@@ -86,15 +86,15 @@ jobs:
       
       - name: Run API tests with MongoDB Memory Server (tolerant)
         run: |
-          echo "🏗️ Running API system tests..."
-          npm run test:api || echo "⚠️ Some API tests failed (MongoDB Memory Server issues on Ubuntu - acceptable for LAB_08)"
-          echo "✅ API system tests completed"
+          echo "Running API system tests..."
+          npm run test:api || echo "Some API tests failed (MongoDB Memory Server issues on Ubuntu - acceptable for LAB_08)"
+          echo "API system tests completed"
         env:
           NODE_ENV: test
 
   # Job 4: Build Test (wartet auf Code Quality)
   build-test:
-    name: 🏗️ Build Application
+    name: Build Application
     runs-on: ubuntu-latest
     needs: [lint-and-typecheck]
     
@@ -114,14 +114,14 @@ jobs:
       - name: Build Next.js application (tolerant)
         run: |
           echo "🏗️ Building Next.js application..."
-          npm run build || echo "⚠️ Build had warnings (acceptable for LAB_08)"
-          echo "✅ Build completed"
+          npm run build || echo "Build had warnings (acceptable for LAB_08)"
+          echo "Build completed"
         env:
           NODE_ENV: production
 
-  # Job 5: Security Audit (bereits funktioniert)
+  # Job 5: Security Audit
   security-audit:
-    name: 🔒 Security Check
+    name: Security Check
     runs-on: ubuntu-latest
     
     steps:
@@ -139,13 +139,13 @@ jobs:
       
       - name: Run security audit
         run: |
-          echo "🔒 Running security audit..."
-          npm audit --audit-level moderate || echo "⚠️ Some security warnings found"
-          echo "✅ Security check completed"
+          echo "Running security audit..."
+          npm audit --audit-level moderate || echo "Some security warnings found"
+          echo "Security check completed"
 
   # Job 6: Integration Tests (wartet auf API Tests)
   integration-tests:
-    name: 🔗 Integration Tests
+    name: Integration Tests
     runs-on: ubuntu-latest
     needs: [api-tests]
     
@@ -164,15 +164,15 @@ jobs:
       
       - name: Run integration tests (demo)
         run: |
-          echo "🔗 Running integration tests..."
-          echo "✅ All systems integrated successfully!"
-          echo "📊 Tests demonstrated CI/CD pipeline concept"
+          echo "Running integration tests..."
+          echo "All systems integrated successfully!"
+          echo "Tests demonstrated CI/CD pipeline concept"
         env:
           NODE_ENV: test
 
   # Job 7: Deploy (wartet auf alle wichtigen Jobs)
   deploy-staging:
-    name: 🚀 Deploy to Staging
+    name: Deploy to Staging
     runs-on: ubuntu-latest
     needs: [build-test, api-tests, integration-tests, security-audit]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -183,19 +183,18 @@ jobs:
       
       - name: Deploy to staging (demo)
         run: |
-          echo "🚀 Deploying Calora App to staging..."
-          echo "✅ Deployment successful!"
-          echo "📍 Staging URL: https://calora-staging.vercel.app"
+          echo "Deploying Calora App to staging..."
+          echo "Deployment successful!"
       
       - name: LAB_08 Summary
         run: |
-          echo "🎉 LAB_08 CI/CD Pipeline completed successfully!"
-          echo "📋 Pipeline Features Demonstrated:"
-          echo "  ✅ Code Quality Checks"
-          echo "  ✅ Unit Tests"
-          echo "  ✅ System Tests with MongoDB"
-          echo "  ✅ Build Process"
-          echo "  ✅ Security Audits"
-          echo "  ✅ Job Dependencies"
-          echo "  ✅ Conditional Deployment"
-          echo "🎯 All LAB_08 requirements fulfilled!"
+          echo "LAB_08 CI/CD Pipeline completed successfully!"
+          echo "Pipeline Features Demonstrated:"
+          echo "  Code Quality Checks"
+          echo "  Unit Tests"
+          echo "  System Tests with MongoDB"
+          echo "  Build Process"
+          echo "  Security Audits"
+          echo "  Job Dependencies"
+          echo "  Conditional Deployment"
+          echo "All LAB_08 requirements fulfilled!"

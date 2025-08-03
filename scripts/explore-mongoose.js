@@ -53,9 +53,9 @@ const SupportTicket = mongoose.model('SupportTicket', supportTicketSchema);
 async function connectDB() {
   try {
     await mongoose.connect(MONGODB_URI);
-    console.log('✅ MongoDB verbunden');
+    console.log('MongoDB verbunden');
   } catch (error) {
-    console.error('❌ MongoDB Verbindungsfehler:', error);
+    console.error('MongoDB Verbindungsfehler:', error);
     process.exit(1);
   }
 }
@@ -64,44 +64,44 @@ async function connectDB() {
 
 // 1. Alle User anzeigen
 async function exploreUsers() {
-  console.log('\n📊 === USERS EXPLORATION ===');
+  console.log('\n=== USERS EXPLORATION ===');
   
   // Alle User
   const allUsers = await User.find();
-  console.log('👥 Alle User:', allUsers.length);
+  console.log('Alle User:', allUsers.length);
   
   // Nur aktive User
   const activeUsers = await User.find({ isActive: true });
-  console.log('✅ Aktive User:', activeUsers.length);
+  console.log('Aktive User:', activeUsers.length);
   
   // Nur Admins
   const admins = await User.find({ isAdmin: true });
-  console.log('🔒 Admins:', admins.length);
+  console.log('Admins:', admins.length);
   
   // User nach Geschlecht
   const maleUsers = await User.countDocuments({ gender: 'male' });
   const femaleUsers = await User.countDocuments({ gender: 'female' });
-  console.log(`👨 Männlich: ${maleUsers}, 👩 Weiblich: ${femaleUsers}`);
+  console.log(`Männlich: ${maleUsers}, Weiblich: ${femaleUsers}`);
   
   // Durchschnittsalter
   const avgAge = await User.aggregate([
     { $group: { _id: null, avgAge: { $avg: '$age' } } }
   ]);
-  console.log('📊 Durchschnittsalter:', avgAge[0]?.avgAge?.toFixed(1));
+  console.log('Durchschnittsalter:', avgAge[0]?.avgAge?.toFixed(1));
   
   return allUsers;
 }
 
 // 2. Food Entries analysieren
 async function exploreFoodEntries() {
-  console.log('\n🍽️ === FOOD ENTRIES EXPLORATION ===');
+  console.log('\n=== FOOD ENTRIES EXPLORATION ===');
   
   // Alle Food Entries
   const allEntries = await FoodEntry.find().populate('userId', 'username');
-  console.log('📝 Alle Food-Einträge:', allEntries.length);
+  console.log('Alle Food-Einträge:', allEntries.length);
   
   // Food Entries mit User-Details
-  console.log('\n📋 Food-Einträge mit User:');
+  console.log('\nFood-Einträge mit User:');
   allEntries.forEach(entry => {
     console.log(`- ${entry.userId?.username}: "${entry.foodText}" (${entry.aiAnalysis.calories} kcal)`);
   });
@@ -133,7 +133,7 @@ async function exploreFoodEntries() {
     }
   ]);
   
-  console.log('\n📊 Kalorien-Statistik pro User:');
+  console.log('\nKalorien-Statistik pro User:');
   caloriesPerUser.forEach(stat => {
     console.log(`- ${stat.username}: ${stat.totalCalories} kcal total (${stat.entryCount} Einträge, ⌀ ${Math.round(stat.avgCaloriesPerEntry)} kcal/Eintrag)`);
   });
@@ -144,7 +144,7 @@ async function exploreFoodEntries() {
     .limit(3)
     .populate('userId', 'username');
   
-  console.log('\n🔥 Top 3 Kalorien-Bomben:');
+  console.log('\nTop 3 Kalorien-Bomben:');
   topCalorieEntries.forEach((entry, index) => {
     console.log(`${index + 1}. ${entry.foodText} - ${entry.aiAnalysis.calories} kcal (${entry.userId?.username})`);
   });
@@ -154,11 +154,11 @@ async function exploreFoodEntries() {
 
 // 3. Support Tickets analysieren
 async function exploreSupportTickets() {
-  console.log('\n🎫 === SUPPORT TICKETS EXPLORATION ===');
+  console.log('\n=== SUPPORT TICKETS EXPLORATION ===');
   
   // Alle Tickets
   const allTickets = await SupportTicket.find().populate('userId', 'username');
-  console.log('📋 Alle Support-Tickets:', allTickets.length);
+  console.log('Alle Support-Tickets:', allTickets.length);
   
   // Tickets nach Status
   const ticketsByStatus = await SupportTicket.aggregate([
@@ -166,7 +166,7 @@ async function exploreSupportTickets() {
     { $sort: { count: -1 } }
   ]);
   
-  console.log('\n📊 Tickets nach Status:');
+  console.log('\nTickets nach Status:');
   ticketsByStatus.forEach(stat => {
     console.log(`- ${stat._id}: ${stat.count} Tickets`);
   });
@@ -177,14 +177,14 @@ async function exploreSupportTickets() {
     { $sort: { count: -1 } }
   ]);
   
-  console.log('\n⚡ Tickets nach Priorität:');
+  console.log('\nTickets nach Priorität:');
   ticketsByPriority.forEach(stat => {
     console.log(`- ${stat._id}: ${stat.count} Tickets`);
   });
   
   // Offene Tickets
   const openTickets = await SupportTicket.find({ status: 'open' }).populate('userId', 'username');
-  console.log('\n🚨 Offene Tickets:');
+  console.log('\nOffene Tickets:');
   openTickets.forEach(ticket => {
     console.log(`- "${ticket.subject}" (${ticket.priority}) - ${ticket.userId?.username || 'Anonym'}`);
   });
@@ -194,7 +194,7 @@ async function exploreSupportTickets() {
 
 // 4. App-spezifische Queries (für deine Next.js App)
 async function appQueries() {
-  console.log('\n🚀 === APP-SPEZIFISCHE QUERIES ===');
+  console.log('\n=== APP-SPEZIFISCHE QUERIES ===');
   
   // Query 1: User Login (by email)
   console.log('\n1. User Login Query:');
@@ -232,7 +232,7 @@ async function appQueries() {
     SupportTicket.countDocuments({ status: 'open' })
   ]);
   
-  console.log(`📊 Dashboard: ${stats[0]} aktive User, ${stats[1]} Food-Einträge, ${stats[2]} offene Tickets`);
+  console.log(`Dashboard: ${stats[0]} aktive User, ${stats[1]} Food-Einträge, ${stats[2]} offene Tickets`);
   
   // Query 5: Search User (für Admin)
   console.log('\n5. User Search (Admin):');
@@ -251,7 +251,7 @@ async function appQueries() {
 
 // 5. Performance Tests
 async function performanceTests() {
-  console.log('\n⚡ === PERFORMANCE TESTS ===');
+  console.log('\n=== PERFORMANCE TESTS ===');
   
   // Test 1: Einfache Queries
   console.time('Simple User Query');
@@ -276,7 +276,7 @@ async function exploreDatabase() {
   try {
     await connectDB();
     
-    console.log('🔍 === CALORA DATABASE EXPLORATION ===\n');
+    console.log('=== CALORA DATABASE EXPLORATION ===\n');
     
     await exploreUsers();
     await exploreFoodEntries();
@@ -284,13 +284,13 @@ async function exploreDatabase() {
     await appQueries();
     await performanceTests();
     
-    console.log('\n✅ === EXPLORATION COMPLETE ===');
+    console.log('\n=== EXPLORATION COMPLETE ===');
     
   } catch (error) {
-    console.error('❌ Fehler bei Database Exploration:', error);
+    console.error('Fehler bei Database Exploration:', error);
   } finally {
     await mongoose.connection.close();
-    console.log('🔌 MongoDB Verbindung geschlossen');
+    console.log('MongoDB Verbindung geschlossen');
   }
 }
 

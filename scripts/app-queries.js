@@ -47,13 +47,13 @@ const MONGODB_URI = 'mongodb://admin:password123@localhost:27017/calora?authSour
 
 async function connectDB() {
   await mongoose.connect(MONGODB_URI);
-  console.log('✅ MongoDB connected for App Queries');
+  console.log('MongoDB connected for App Queries');
 }
 
 // === QUERIES FÜR HOMEPAGE (index.tsx) ===
 
 async function homepageQueries() {
-  console.log('\n🏠 === HOMEPAGE QUERIES ===');
+  console.log('\n=== HOMEPAGE QUERIES ===');
   
   // 1. User-spezifische Food-Einträge für aktuellen Tag
   async function getTodaysFoodEntries(userId) {
@@ -103,16 +103,16 @@ async function homepageQueries() {
   // Test mit nora_test
   const noraUser = await User.findOne({ username: 'nora_test' });
   if (noraUser) {
-    console.log(`\n👩 Testing mit User: ${noraUser.username}`);
+    console.log(`\nTesting mit User: ${noraUser.username}`);
     
     const todaysEntries = await getTodaysFoodEntries(noraUser._id);
-    console.log(`📅 Heutige Einträge: ${todaysEntries.length}`);
+    console.log(`Heutige Einträge: ${todaysEntries.length}`);
     
     const totalCalories = await getTodaysTotalCalories(noraUser._id);
-    console.log(`🔥 Gesamtkalorien heute: ${totalCalories.totalCalories} kcal`);
+    console.log(`Gesamtkalorien heute: ${totalCalories.totalCalories} kcal`);
     
     const recentEntries = await getRecentFoodEntries(noraUser._id);
-    console.log(`📝 Letzte ${recentEntries.length} Einträge:`);
+    console.log(`Letzte ${recentEntries.length} Einträge:`);
     recentEntries.forEach(entry => {
       console.log(`   - ${entry.foodText} (${entry.aiAnalysis.calories} kcal)`);
     });
@@ -122,7 +122,7 @@ async function homepageQueries() {
 // === QUERIES FÜR ADMIN-DASHBOARD ===
 
 async function adminQueries() {
-  console.log('\n🔒 === ADMIN DASHBOARD QUERIES ===');
+  console.log('\n=== ADMIN DASHBOARD QUERIES ===');
   
   // 1. Dashboard-Statistiken
   async function getDashboardStats() {
@@ -173,22 +173,22 @@ async function adminQueries() {
   
   // Tests
   const stats = await getDashboardStats();
-  console.log('📊 Dashboard Stats:', stats);
+  console.log('Dashboard Stats:', stats);
   
   const recentUsers = await getRecentUsers(30); // Letzte 30 Tage
-  console.log(`👥 Neue User (30 Tage): ${recentUsers.length}`);
+  console.log(`Neue User (30 Tage): ${recentUsers.length}`);
   
   const searchResults = await searchUsers('nora');
-  console.log(`🔍 Search "nora": ${searchResults.length} Ergebnisse`);
+  console.log(`Search "nora": ${searchResults.length} Ergebnisse`);
   
   const tickets = await getTicketsForAdmin('open');
-  console.log(`🎫 Offene Tickets: ${tickets.length}`);
+  console.log(`Offene Tickets: ${tickets.length}`);
 }
 
 // === QUERIES FÜR USER-PROFIL ===
 
 async function userProfileQueries() {
-  console.log('\n👤 === USER PROFILE QUERIES ===');
+  console.log('\n=== USER PROFILE QUERIES ===');
   
   // 1. User-Profil mit Statistiken
   async function getUserProfile(userId) {
@@ -262,20 +262,20 @@ async function userProfileQueries() {
   const noraUser = await User.findOne({ username: 'nora_test' });
   if (noraUser) {
     const profile = await getUserProfile(noraUser._id);
-    console.log(`👩 Profil für ${profile.user.username}:`);
+    console.log(`Profil für ${profile.user.username}:`);
     console.log(`   - Total Einträge: ${profile.stats.totalEntries}`);
     console.log(`   - Total Kalorien: ${profile.stats.totalCalories}`);
     console.log(`   - Ø Kalorien/Tag: ${Math.round(profile.stats.avgCaloriesPerDay)}`);
     
     const weeklyTrend = await getWeeklyCaloriesTrend(noraUser._id);
-    console.log(`📈 Wöchentlicher Trend (${weeklyTrend.length} Tage mit Daten)`);
+    console.log(`Wöchentlicher Trend (${weeklyTrend.length} Tage mit Daten)`);
   }
 }
 
 // === MAINTENANCE CALCULATOR QUERIES ===
 
 async function maintenanceQueries() {
-  console.log('\n⚖️ === MAINTENANCE CALCULATOR QUERIES ===');
+  console.log('\n=== MAINTENANCE CALCULATOR QUERIES ===');
   
   // 1. User BMR aktualisieren
   async function updateUserMaintenanceCalories(userId, newCalories) {
@@ -305,7 +305,7 @@ async function maintenanceQueries() {
   const noraUser = await User.findOne({ username: 'nora_test' });
   if (noraUser) {
     const balance = await getCalorieBalance(noraUser._id);
-    console.log(`⚖️ Kalorien-Balance für ${noraUser.username}:`);
+    console.log(`Kalorien-Balance für ${noraUser.username}:`);
     console.log(`   - Maintenance: ${balance.maintenanceCalories} kcal`);
     console.log(`   - Consumed: ${balance.consumedCalories} kcal`);
     console.log(`   - Balance: ${balance.balance > 0 ? '+' : ''}${balance.balance} kcal`);
@@ -342,20 +342,20 @@ async function runAppQueries() {
   try {
     await connectDB();
     
-    console.log('🎯 === CALORA APP-SPECIFIC QUERIES ===');
+    console.log('=== CALORA APP-SPECIFIC QUERIES ===');
     
     await homepageQueries();
     await adminQueries();
     await userProfileQueries();
     await maintenanceQueries();
     
-    console.log('\n✅ === APP QUERIES COMPLETE ===');
+    console.log('\n=== APP QUERIES COMPLETE ===');
     
   } catch (error) {
-    console.error('❌ Fehler bei App Queries:', error);
+    console.error('Fehler bei App Queries:', error);
   } finally {
     await mongoose.connection.close();
-    console.log('🔌 MongoDB Verbindung geschlossen');
+    console.log('MongoDB Verbindung geschlossen');
   }
 }
 

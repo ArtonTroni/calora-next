@@ -22,7 +22,7 @@ beforeAll(async () => {
   // Mit Memory Server verbinden
   await mongoose.connect(mongoUri);
   
-  console.log('🟢 MongoDB Memory Server gestartet für Tests');
+  console.log('MongoDB Memory Server gestartet für Tests');
 });
 
 // Nach allen Tests: Aufräumen
@@ -34,7 +34,7 @@ afterAll(async () => {
   // Memory Server stoppen
   await mongoServer.stop();
   
-  console.log('🔴 MongoDB Memory Server gestoppt');
+  console.log('MongoDB Memory Server gestoppt');
 });
 
 // Vor jedem Test: Datenbank leeren (außer bei spezifischen Tests)

@@ -101,16 +101,16 @@ async function seedTestDatabase() {
       socketTimeoutMS: 45000,
     });
     
-    console.log('✅ Connected to test database');
+    console.log('Connected to test database');
     
     // Clear existing data
     await User.deleteMany({});
     await FoodEntry.deleteMany({});
-    console.log('🧹 Cleared test database');
+    console.log('Cleared test database');
     
     // Insert test users
     const users = await User.insertMany(testUsers);
-    console.log(`✅ Created ${users.length} test users`);
+    console.log(`Created ${users.length} test users`);
     
     // Insert test food entries
     const testUser = users[0];
@@ -120,24 +120,24 @@ async function seedTestDatabase() {
     }));
     
     const foodEntries = await FoodEntry.insertMany(foodEntriesWithUser);
-    console.log(`✅ Created ${foodEntries.length} test food entries`);
+    console.log(`Created ${foodEntries.length} test food entries`);
     
     // Verification
     const userCount = await User.countDocuments();
     const entryCount = await FoodEntry.countDocuments();
     
-    console.log('\n📊 Test Database Verification:');
+    console.log('\nTest Database Verification:');
     console.log(`   Users: ${userCount}`);
     console.log(`   Food Entries: ${entryCount}`);
     
-    console.log('🎉 Test database seeding completed successfully!');
+    console.log('Test database seeding completed successfully!');
     
   } catch (error) {
-    console.error('❌ Test seeding failed:', error);
+    console.error('Test seeding failed:', error);
     process.exit(1);
   } finally {
     await mongoose.connection.close();
-    console.log('🔌 Test database disconnected');
+    console.log('Test database disconnected');
   }
 }
 

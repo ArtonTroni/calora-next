@@ -11,4 +11,4 @@ if (!process.env.MONGODB_URI) {
   (process.env as any).MONGODB_URI = 'mongodb://localhost:27017/calora_test';
 }
 
-console.log('🔧 Test-Umgebung konfiguriert');
+console.log('Test-Umgebung konfiguriert');

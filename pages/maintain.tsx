@@ -24,28 +24,19 @@ export default function Maintain() {
     }
 
     const maintenance = Math.round(bmr * activity);
-    setResult(`Dein täglicher Erhaltungskalorienbedarf beträgt ca. ${maintenance} kcal.`);
-  };
-
-  const exampleData = {
-    age: 25,
-    height: 175,
-    weight: 70,
-    gender: 'Männlich',
-    activity: 'Normal aktiv',
-    result: 2594
+    setResult(`Dein täglicher Maintenance-Kalorienbedarf beträgt ca. ${maintenance} kcal.`);
   };
 
   return (
     <>
       <Head>
-        <title>Erhaltungskalorien - Calora</title>
+        <title>Maintenance Kalorien - Calora</title>
       </Head>
 
       <div className="maintain-container">
         <div className="maintain-header">
-          <h1>Erhaltungskalorien berechnen</h1>
-          <p className="subtitle">Berechne deinen täglichen Kalorienbedarf</p>
+          <h1>Maintenance-Kalorien berechnen</h1>
+          <p className="subtitle">Berechne deinen täglichen Erhaltungskalorienbedarf</p>
         </div>
 
         <div className="maintain-content">
@@ -80,14 +71,16 @@ export default function Maintain() {
                 <label htmlFor="activity">Aktivitätslevel</label>
                 <select name="activity" required>
                   <option value="">Bitte wählen...</option>
-                  <option value="1.2">Wenig aktiv</option>
-                  <option value="1.55">Normal aktiv</option>
-                  <option value="1.9">Sehr aktiv</option>
+                  <option value="1.2">Wenig aktiv (Bürojob, wenig Sport)</option>
+                  <option value="1.375">Leicht aktiv (1-3x Sport/Woche)</option>
+                  <option value="1.55">Mäßig aktiv (3-5x Sport/Woche)</option>
+                  <option value="1.725">Sehr aktiv (6-7x Sport/Woche)</option>
+                  <option value="1.9">Extrem aktiv (2x täglich Sport)</option>
                 </select>
               </div>
 
               <button type="submit" className="btn calculate-btn">
-                🧮 Berechnen
+                🧮 Maintenance-Kalorien berechnen
               </button>
             </form>
           </div>
@@ -99,37 +92,6 @@ export default function Maintain() {
                 <div className="result-display">
                   <div className="result-icon">🎯</div>
                   <p>{result}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="example-section">
-              <h3>Beispielhafte Berechnung</h3>
-              <div className="example-card">
-                <div className="example-data">
-                  <div className="data-row">
-                    <span className="data-label">Alter:</span>
-                    <span className="data-value">{exampleData.age} Jahre</span>
-                  </div>
-                  <div className="data-row">
-                    <span className="data-label">Größe:</span>
-                    <span className="data-value">{exampleData.height} cm</span>
-                  </div>
-                  <div className="data-row">
-                    <span className="data-label">Gewicht:</span>
-                    <span className="data-value">{exampleData.weight} kg</span>
-                  </div>
-                  <div className="data-row">
-                    <span className="data-label">Geschlecht:</span>
-                    <span className="data-value">{exampleData.gender}</span>
-                  </div>
-                  <div className="data-row">
-                    <span className="data-label">Aktivität:</span>
-                    <span className="data-value">{exampleData.activity}</span>
-                  </div>
-                </div>
-                <div className="example-result">
-                  <strong>Erhaltungskalorien: {exampleData.result} kcal/Tag</strong>
                 </div>
               </div>
             </div>

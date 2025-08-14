@@ -1,19 +1,39 @@
 {
   "extends": [
     "next/core-web-vitals",
-    "@typescript-eslint/eslint-plugin"
+    "@typescript-eslint/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint"],
-  "rules": {
-    "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/no-unused-vars": "warn",
-    "prefer-const": "warn",
-    "no-var": "warn",
-    "@next/next/no-html-link-for-pages": "warn"
-  },
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "jest": true
+  },
+  "ignorePatterns": [
+    ".next",
+    "node_modules",
+    "coverage",
+    "*.config.js"
+  ],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    
+    "prefer-const": "error",
+    "no-var": "error",
+    "no-console": "warn",
+    
+    "@next/next/no-img-element": "off",
+    "@next/next/no-html-link-for-pages": "warn",
+    
+    "no-process-env": "off"
   }
 }

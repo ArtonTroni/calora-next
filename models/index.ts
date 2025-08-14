@@ -1,11 +1,10 @@
-// Fixed Models without duplicate indexes
+// Simplified Models für Calora App
 import mongoose, { Schema, Document } from 'mongoose';
 
-// User Interface & Schema
+// User Interface & Schema (für Food Entry References)
 export interface IUser extends Document {
   username: string;
   email: string;
-  passwordHash?: string;
   age: number;
   gender: 'male' | 'female';
   weight: number;
@@ -27,7 +26,6 @@ const UserSchema = new Schema<IUser>({
     type: String, required: true, unique: true,
     lowercase: true, trim: true
   },
-  passwordHash: { type: String, select: false },
   age: { type: Number, required: true, min: 13, max: 120 },
   gender: { type: String, enum: ['male', 'female'], required: true },
   weight: { type: Number, required: true, min: 30, max: 300 },
@@ -38,11 +36,7 @@ const UserSchema = new Schema<IUser>({
   isActive: { type: Boolean, default: true }
 }, { timestamps: true });
 
-// Remove manual indexes - unique: true already creates them
-// UserSchema.index({ email: 1 }); // REMOVED
-// UserSchema.index({ username: 1 }); // REMOVED
-
-// Food Entry Interface & Schema
+// Food Entry Interface & Schema (Hauptmodel deiner App)
 export interface IFoodEntry extends Document {
   userId: mongoose.Types.ObjectId;
   foodText: string;
@@ -79,44 +73,9 @@ const FoodEntrySchema = new Schema<IFoodEntry>({
   }
 }, { timestamps: true });
 
-// Keep only the compound index for performance
+// Performance Index für häufige Queries
 FoodEntrySchema.index({ userId: 1, createdAt: -1 });
-
-// Support Ticket Interface & Schema  
-export interface ISupportTicket extends Document {
-  userId?: mongoose.Types.ObjectId;
-  subject: string;
-  message: string;
-  status: 'open' | 'in-progress' | 'resolved' | 'closed';
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  assignedTo?: string;
-  resolvedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const SupportTicketSchema = new Schema<ISupportTicket>({
-  userId: { type: Schema.Types.ObjectId, ref: 'User', required: false },
-  subject: { type: String, required: true, trim: true, maxlength: 200 },
-  message: { type: String, required: true, trim: true, maxlength: 2000 },
-  status: { 
-    type: String, 
-    enum: ['open', 'in-progress', 'resolved', 'closed'],
-    default: 'open'
-  },
-  priority: { 
-    type: String, 
-    enum: ['low', 'medium', 'high', 'urgent'],
-    default: 'medium'
-  },
-  assignedTo: { type: String, required: false },
-  resolvedAt: { type: Date, required: false }
-}, { timestamps: true });
-
-// Only needed performance index
-SupportTicketSchema.index({ status: 1, createdAt: -1 });
 
 // Export Models (Next.js Singleton Pattern)
 export const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
-export const FoodEntry = mongoose.models.FoodEntry || mongoose.model<IFoodEntry>('FoodEntry', FoodEntrySchema);  
-export const SupportTicket = mongoose.models.SupportTicket || mongoose.model<ISupportTicket>('SupportTicket', SupportTicketSchema);
+export const FoodEntry = mongoose.models.FoodEntry || mongoose.model<IFoodEntry>('FoodEntry', FoodEntrySchema);

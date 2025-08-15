@@ -1,10 +1,9 @@
-// scripts/test-seed.js
 const mongoose = require('mongoose');
 
-// Test Database Connection
+// test db connection
 const MONGODB_URI_TEST = process.env.MONGODB_URI_TEST || 'mongodb://admin:password123@localhost:27017/calora_test?authSource=admin';
 
-// Simplified schemas for testing
+// schemas für testing
 const userSchema = new mongoose.Schema({
   username: String,
   email: String,
@@ -36,7 +35,7 @@ const foodEntrySchema = new mongoose.Schema({
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 const FoodEntry = mongoose.models.FoodEntry || mongoose.model('FoodEntry', foodEntrySchema);
 
-// Test Data
+// test data
 const testUsers = [
   {
     username: 'ci_test_user',
@@ -94,25 +93,25 @@ const testFoodEntries = [
 
 async function seedTestDatabase() {
   try {
-    // Connect to test database
+    // connect zu test db
     await mongoose.connect(MONGODB_URI_TEST, {
       maxPoolSize: 5,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
     });
     
-    console.log('Connected to test database');
+    console.log('Test DB connected');
     
-    // Clear existing data
+    // alles löschen
     await User.deleteMany({});
     await FoodEntry.deleteMany({});
-    console.log('Cleared test database');
+    console.log('Test DB cleared');
     
-    // Insert test users
+    // test users erstellen
     const users = await User.insertMany(testUsers);
-    console.log(`Created ${users.length} test users`);
+    console.log(`${users.length} test users created`);
     
-    // Insert test food entries
+    // test food entries erstellen
     const testUser = users[0];
     const foodEntriesWithUser = testFoodEntries.map(entry => ({
       ...entry,
@@ -120,28 +119,28 @@ async function seedTestDatabase() {
     }));
     
     const foodEntries = await FoodEntry.insertMany(foodEntriesWithUser);
-    console.log(`Created ${foodEntries.length} test food entries`);
+    console.log(`${foodEntries.length} test food entries created`);
     
-    // Verification
+    // verification
     const userCount = await User.countDocuments();
     const entryCount = await FoodEntry.countDocuments();
     
-    console.log('\nTest Database Verification:');
+    console.log('\nTest DB Verification:');
     console.log(`   Users: ${userCount}`);
     console.log(`   Food Entries: ${entryCount}`);
     
-    console.log('Test database seeding completed successfully!');
+    console.log('Test seeding complete!');
     
   } catch (error) {
     console.error('Test seeding failed:', error);
     process.exit(1);
   } finally {
     await mongoose.connection.close();
-    console.log('Test database disconnected');
+    console.log('Test DB disconnected');
   }
 }
 
-// Script execution
+// script ausführen
 if (require.main === module) {
   seedTestDatabase();
 }

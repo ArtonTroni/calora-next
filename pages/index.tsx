@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 
-// TypeScript Interfaces für API
 interface FoodEntry {
   id: string;
   foodText: string;
@@ -24,17 +23,17 @@ interface CreateFoodEntryData {
 }
 
 export default function Home() {
-  // State für echte Database-Daten
+  // state für echte db daten
   const [entries, setEntries] = useState<FoodEntry[]>([]);
   const [totalCalories, setTotalCalories] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  // Form State
+  // form state
   const [foodInput, setFoodInput] = useState('');
   const [lastAnalysis, setLastAnalysis] = useState<string>('');
 
-  // Mock ChatGPT Analyse (nur für UI-Anzeige)
+  // mock ChatGPT analyse (nur für UI)
   const generateMockAnalysis = (input: string): string => {
     const lower = input.toLowerCase();
     if (lower.includes('pizza')) {
@@ -48,7 +47,7 @@ export default function Home() {
     }
   };
 
-  // Echte API: Food Entries von heute laden
+  // echte API: heutige entries laden
   const loadTodaysFoodEntries = async () => {
     try {
       setLoading(true);
@@ -73,7 +72,7 @@ export default function Home() {
     }
   };
 
-  // Echte API: Neuen Food Entry erstellen
+  // echte API: neuen entry erstellen
   const createFoodEntry = async (foodText: string, meal: 'breakfast' | 'lunch' | 'dinner' | 'snack' = 'snack') => {
     if (!foodText.trim()) {
       alert('Bitte geben Sie ein Lebensmittel ein!');
@@ -84,11 +83,11 @@ export default function Home() {
       setLoading(true);
       setError(null);
 
-      // Mock-Analyse für UI anzeigen (bevor API-Call)
+      // mock analyse für UI (vor API call)
       const mockAnalysis = generateMockAnalysis(foodText);
       setLastAnalysis(mockAnalysis);
 
-      // Echter API-Call
+      // echter API call
       const response = await fetch('/api/food-entries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -103,9 +102,9 @@ export default function Home() {
         throw new Error(errorData.error || 'Fehler beim Speichern');
       }
 
-      // Erfolg: Form zurücksetzen und Daten neu laden
+      // erfolg: form reset und neu laden
       setFoodInput('');
-      await loadTodaysFoodEntries(); // Neu laden um aktuelle Daten zu zeigen
+      await loadTodaysFoodEntries();
 
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Fehler beim Erstellen');
@@ -115,7 +114,7 @@ export default function Home() {
     }
   };
 
-  // Echte API: Food Entry löschen (ohne Bestätigung)
+  // echte API: entry löschen (ohne bestätigung)
   const deleteFoodEntry = async (entryId: string) => {
     try {
       setLoading(true);
@@ -126,7 +125,6 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        // Bei 404 oder anderen Fehlern
         if (response.status === 404) {
           setError('Eintrag wurde bereits gelöscht');
         } else {
@@ -135,7 +133,7 @@ export default function Home() {
         return;
       }
 
-      // Erfolg: Daten neu laden
+      // erfolg: neu laden
       await loadTodaysFoodEntries();
 
     } catch (err) {
@@ -146,18 +144,16 @@ export default function Home() {
     }
   };
 
-  // Form Submit Handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await createFoodEntry(foodInput);
   };
 
-  // Initial load: Heutige Einträge laden
+  // initial load
   useEffect(() => {
     loadTodaysFoodEntries();
   }, []);
 
-  // Meal-Label Helper
   const getMealLabel = (meal: string) => {
     const mealLabels = {
       breakfast: 'Frühstück',
@@ -168,7 +164,6 @@ export default function Home() {
     return mealLabels[meal as keyof typeof mealLabels] || meal;
   };
 
-  // Zeit formatieren
   const formatTime = (dateString: string) => {
     return new Date(dateString).toLocaleString('de-DE', {
       hour: '2-digit',
@@ -243,7 +238,7 @@ export default function Home() {
             </div>
           )}
 
-          {/* Database Status */}
+          {/* DB Status */}
           <div style={{ 
             fontSize: '0.8em', 
             color: '#666', 
@@ -366,7 +361,7 @@ export default function Home() {
                 <button
                   key={item.food}
                   onClick={async () => {
-                    console.log(`Quick-Add: ${item.food}`); // Debug
+                    console.log(`Quick-Add: ${item.food}`); // debug
                     await createFoodEntry(item.food, item.meal as any);
                   }}
                   disabled={loading}

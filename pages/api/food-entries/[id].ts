@@ -11,14 +11,13 @@ export default async function handler(
 
   const { id } = req.query;
 
-  // ID Validation
+  // validate ID
   if (!id || !Types.ObjectId.isValid(id as string)) {
     return res.status(400).json({
       error: 'Invalid food entry ID'
     });
   }
 
-  // DELETE - Food Entry löschen
   if (req.method === 'DELETE') {
     try {
       const deletedEntry = await FoodEntry.findByIdAndDelete(id);
@@ -42,7 +41,6 @@ export default async function handler(
     }
   }
 
-  // Method not allowed
   return res.status(405).json({
     error: 'Method not allowed',
     allowed: ['DELETE']

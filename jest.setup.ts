@@ -1,45 +1,44 @@
-// jest.setup.ts
 import '@testing-library/jest-dom';
 
-// MongoDB Memory Server für Tests
+// mongodb memory server für tests
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
 let mongoServer: MongoMemoryServer;
 
-// Vor allen Tests: MongoDB Memory Server starten
+// vor allen tests: memory server starten
 beforeAll(async () => {
-  // MongoDB Memory Server erstellen
+  // memory server erstellen
   mongoServer = await MongoMemoryServer.create({
     binary: {
       version: '6.0.0',
     },
   });
   
-  // Connection String vom Memory Server bekommen
+  // connection string vom memory server
   const mongoUri = mongoServer.getUri();
   
-  // Mit Memory Server verbinden
+  // mit memory server verbinden
   await mongoose.connect(mongoUri);
   
-  console.log('MongoDB Memory Server gestartet für Tests');
+  console.log('MongoDB Memory Server gestartet');
 });
 
-// Nach allen Tests: Aufräumen
+// nach allen tests: aufräumen
 afterAll(async () => {
-  // Alle Verbindungen schließen
+  // verbindungen schließen
   await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
   
-  // Memory Server stoppen
+  // memory server stoppen
   await mongoServer.stop();
   
   console.log('MongoDB Memory Server gestoppt');
 });
 
-// Vor jedem Test: Datenbank leeren (außer bei spezifischen Tests)
+// vor jedem test: db leeren (außer bei spezifischen tests)
 beforeEach(async () => {
-  // Nur Collections löschen, die existieren
+  // nur collections löschen die existieren
   const collections = mongoose.connection.collections;
   
   for (const key in collections) {
@@ -47,5 +46,5 @@ beforeEach(async () => {
   }
 });
 
-// Globale Test-Timeouts erhöhen (für Datenbankoperationen)
+// timeouts erhöhen (für db operationen)
 jest.setTimeout(30000);

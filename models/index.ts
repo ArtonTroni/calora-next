@@ -1,7 +1,5 @@
-// Simplified Models für Calora App
 import mongoose, { Schema, Document } from 'mongoose';
 
-// User Interface & Schema (für Food Entry References)
 export interface IUser extends Document {
   username: string;
   email: string;
@@ -36,7 +34,6 @@ const UserSchema = new Schema<IUser>({
   isActive: { type: Boolean, default: true }
 }, { timestamps: true });
 
-// Food Entry Interface & Schema (Hauptmodel deiner App)
 export interface IFoodEntry extends Document {
   userId: mongoose.Types.ObjectId;
   foodText: string;
@@ -73,9 +70,9 @@ const FoodEntrySchema = new Schema<IFoodEntry>({
   }
 }, { timestamps: true });
 
-// Performance Index für häufige Queries
+// index for common queries
 FoodEntrySchema.index({ userId: 1, createdAt: -1 });
 
-// Export Models (Next.js Singleton Pattern)
+// nextjs singleton pattern
 export const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
 export const FoodEntry = mongoose.models.FoodEntry || mongoose.model<IFoodEntry>('FoodEntry', FoodEntrySchema);

@@ -1,4 +1,4 @@
-/* ===== CSS RESET ===== */
+/* CSS reset */
 *,
 *::before,
 *::after {
@@ -7,9 +7,9 @@
   box-sizing: border-box;
 }
 
-/* ===== CSS CUSTOM PROPERTIES ===== */
+/* custom properties */
 :root {
-  /* Colors */
+  /* colors */
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --primary-color: #667eea;
   --primary-dark: #764ba2;
@@ -22,7 +22,7 @@
   --text-secondary: #666;
   --text-muted: #999;
   
-  /* Spacing */
+  /* spacing */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
@@ -30,24 +30,24 @@
   --spacing-xl: 2rem;
   --spacing-xxl: 2.5rem;
   
-  /* Border radius */
+  /* border radius */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 15px;
   --radius-xl: 20px;
   
-  /* Shadows */
+  /* shadows */
   --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 12px 40px rgba(0, 0, 0, 0.15);
   
-  /* Transitions */
+  /* transitions */
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
   
-  /* Typography */
+  /* typography */
   --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   --font-size-sm: 0.9rem;
   --font-size-base: 1rem;
@@ -58,13 +58,13 @@
   --font-size-4xl: 2.5rem;
   --line-height: 1.6;
   
-  /* Layout */
+  /* layout */
   --max-width: 1200px;
   --nav-height: 80px;
   --footer-height: 100px;
 }
 
-/* ===== BASE STYLES ===== */
+/* base styles */
 html {
   scroll-behavior: smooth;
 }
@@ -79,7 +79,7 @@ body {
   flex-direction: column;
 }
 
-/* ===== NAVIGATION ===== */
+/* navigation */
 nav {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
@@ -108,7 +108,7 @@ nav a:hover {
   transform: translateY(-1px);
 }
 
-/* ===== MAIN LAYOUT ===== */
+/* main layout */
 main {
   flex: 1;
   padding: var(--spacing-xl);
@@ -118,7 +118,7 @@ main {
   min-height: calc(100vh - var(--nav-height) - var(--footer-height));
 }
 
-/* ===== CONTAINER & PANELS ===== */
+/* container & panels */
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -146,7 +146,7 @@ main {
   box-shadow: var(--shadow-xl);
 }
 
-/* ===== TYPOGRAPHY ===== */
+/* typography */
 h1 {
   font-size: var(--font-size-4xl);
   margin-bottom: var(--spacing-sm);
@@ -167,7 +167,7 @@ h3 {
   padding-bottom: var(--spacing-sm);
 }
 
-/* ===== FORMS ===== */
+/* forms */
 form {
   display: flex;
   flex-direction: column;
@@ -200,7 +200,7 @@ input::placeholder {
   font-style: italic;
 }
 
-/* Form validation states */
+/* form validation */
 input.valid,
 select.valid {
   border-color: var(--success-color);
@@ -213,7 +213,7 @@ select.invalid {
   background: rgba(244, 67, 54, 0.05);
 }
 
-/* ===== BUTTONS ===== */
+/* buttons */
 .btn {
   background: var(--primary-gradient);
   color: white;
@@ -259,7 +259,7 @@ select.invalid {
   transform: translateY(-1px);
 }
 
-/* Button variants */
+/* button variants */
 .btn.success {
   background: linear-gradient(135deg, var(--success-color) 0%, var(--success-dark) 100%);
   box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
@@ -278,7 +278,7 @@ select.invalid {
   box-shadow: 0 6px 25px rgba(108, 117, 125, 0.4);
 }
 
-/* ===== CARDS & COMPONENTS ===== */
+/* cards & components */
 .ai-box {
   background: var(--primary-gradient);
   color: white;
@@ -304,7 +304,7 @@ select.invalid {
   font-style: italic;
 }
 
-/* ===== LISTS ===== */
+/* lists */
 ul {
   list-style: none;
   flex: 1;
@@ -335,7 +335,7 @@ ul li::before {
   font-size: var(--font-size-xl);
 }
 
-/* ===== MAINTAIN PAGE ===== */
+/* maintain page */
 .maintain-container {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -376,7 +376,7 @@ ul li::before {
   font-size: var(--font-size-2xl);
 }
 
-/* Input groups for maintain page */
+/* input groups */
 .input-group {
   display: flex;
   flex-direction: column;
@@ -390,7 +390,7 @@ ul li::before {
   font-size: var(--font-size-base);
 }
 
-/* Result components */
+/* result components */
 .result-section {
   flex: 1;
 }
@@ -437,7 +437,7 @@ ul li::before {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Example section */
+/* example section */
 .example-section {
   flex: 1;
 }
@@ -491,7 +491,7 @@ ul li::before {
   padding-top: var(--spacing-md);
 }
 
-/* ===== FOOTER ===== */
+/* footer */
 footer {
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(15px);
@@ -558,7 +558,7 @@ footer a:hover::after {
   width: 80%;
 }
 
-/* ===== ANIMATIONS ===== */
+/* animations */
 @keyframes slideInUp {
   from {
     opacity: 0;
@@ -602,7 +602,7 @@ footer a:hover::after {
   animation-delay: 0.2s;
 }
 
-/* ===== RESPONSIVE DESIGN ===== */
+/* responsive design */
 @media (max-width: 1024px) {
   :root {
     --max-width: 100%;
@@ -701,7 +701,7 @@ footer a:hover::after {
   }
 }
 
-/* ===== SCROLLBAR STYLING ===== */
+/* scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -720,7 +720,7 @@ footer a:hover::after {
   background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
 }
 
-/* ===== UTILITY CLASSES ===== */
+/* utility classes */
 .text-center { text-align: center; }
 .text-left { text-align: left; }
 .text-right { text-align: right; }

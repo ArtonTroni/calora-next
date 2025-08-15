@@ -1,12 +1,8 @@
-// scripts/explore-mongoose.js
-// Einfache Scripts zum Testen von Mongoose und Database-Queries
-
 const mongoose = require('mongoose');
 
-// MongoDB Connection
 const MONGODB_URI = 'mongodb://admin:password123@localhost:27017/calora?authSource=admin';
 
-// Models (vereinfacht für Scripts)
+// models für scripts
 const userSchema = new mongoose.Schema({
   username: String,
   email: String,
@@ -49,7 +45,6 @@ const User = mongoose.model('User', userSchema);
 const FoodEntry = mongoose.model('FoodEntry', foodEntrySchema);
 const SupportTicket = mongoose.model('SupportTicket', supportTicketSchema);
 
-// Database Connection Function
 async function connectDB() {
   try {
     await mongoose.connect(MONGODB_URI);
@@ -60,30 +55,28 @@ async function connectDB() {
   }
 }
 
-// === EXPLORATION SCRIPTS ===
-
-// 1. Alle User anzeigen
+// user exploration
 async function exploreUsers() {
   console.log('\n=== USERS EXPLORATION ===');
   
-  // Alle User
+  // alle user
   const allUsers = await User.find();
   console.log('Alle User:', allUsers.length);
   
-  // Nur aktive User
+  // nur aktive
   const activeUsers = await User.find({ isActive: true });
   console.log('Aktive User:', activeUsers.length);
   
-  // Nur Admins
+  // nur admins
   const admins = await User.find({ isAdmin: true });
   console.log('Admins:', admins.length);
   
-  // User nach Geschlecht
+  // nach geschlecht
   const maleUsers = await User.countDocuments({ gender: 'male' });
   const femaleUsers = await User.countDocuments({ gender: 'female' });
   console.log(`Männlich: ${maleUsers}, Weiblich: ${femaleUsers}`);
   
-  // Durchschnittsalter
+  // durchschnittsalter
   const avgAge = await User.aggregate([
     { $group: { _id: null, avgAge: { $avg: '$age' } } }
   ]);
@@ -92,21 +85,21 @@ async function exploreUsers() {
   return allUsers;
 }
 
-// 2. Food Entries analysieren
+// food entries analysieren
 async function exploreFoodEntries() {
   console.log('\n=== FOOD ENTRIES EXPLORATION ===');
   
-  // Alle Food Entries
+  // alle entries
   const allEntries = await FoodEntry.find().populate('userId', 'username');
   console.log('Alle Food-Einträge:', allEntries.length);
   
-  // Food Entries mit User-Details
+  // entries mit user details
   console.log('\nFood-Einträge mit User:');
   allEntries.forEach(entry => {
     console.log(`- ${entry.userId?.username}: "${entry.foodText}" (${entry.aiAnalysis.calories} kcal)`);
   });
   
-  // Gesamtkalorien pro User
+  // kalorien pro user
   const caloriesPerUser = await FoodEntry.aggregate([
     {
       $group: {
@@ -138,7 +131,7 @@ async function exploreFoodEntries() {
     console.log(`- ${stat.username}: ${stat.totalCalories} kcal total (${stat.entryCount} Einträge, ⌀ ${Math.round(stat.avgCaloriesPerEntry)} kcal/Eintrag)`);
   });
   
-  // Top Kalorien-Einträge
+  // top kalorien einträge
   const topCalorieEntries = await FoodEntry.find()
     .sort({ 'aiAnalysis.calories': -1 })
     .limit(3)
@@ -152,15 +145,15 @@ async function exploreFoodEntries() {
   return allEntries;
 }
 
-// 3. Support Tickets analysieren
+// support tickets analysieren
 async function exploreSupportTickets() {
   console.log('\n=== SUPPORT TICKETS EXPLORATION ===');
   
-  // Alle Tickets
+  // alle tickets
   const allTickets = await SupportTicket.find().populate('userId', 'username');
   console.log('Alle Support-Tickets:', allTickets.length);
   
-  // Tickets nach Status
+  // nach status
   const ticketsByStatus = await SupportTicket.aggregate([
     { $group: { _id: '$status', count: { $sum: 1 } } },
     { $sort: { count: -1 } }
@@ -171,7 +164,7 @@ async function exploreSupportTickets() {
     console.log(`- ${stat._id}: ${stat.count} Tickets`);
   });
   
-  // Tickets nach Priorität
+  // nach priorität
   const ticketsByPriority = await SupportTicket.aggregate([
     { $group: { _id: '$priority', count: { $sum: 1 } } },
     { $sort: { count: -1 } }
@@ -182,7 +175,7 @@ async function exploreSupportTickets() {
     console.log(`- ${stat._id}: ${stat.count} Tickets`);
   });
   
-  // Offene Tickets
+  // offene tickets
   const openTickets = await SupportTicket.find({ status: 'open' }).populate('userId', 'username');
   console.log('\nOffene Tickets:');
   openTickets.forEach(ticket => {
@@ -192,16 +185,16 @@ async function exploreSupportTickets() {
   return allTickets;
 }
 
-// 4. App-spezifische Queries (für deine Next.js App)
+// app-spezifische queries (für next.js app)
 async function appQueries() {
-  console.log('\n=== APP-SPEZIFISCHE QUERIES ===');
+  console.log('\n=== APP QUERIES ===');
   
-  // Query 1: User Login (by email)
+  // user login (by email)
   console.log('\n1. User Login Query:');
   const userByEmail = await User.findOne({ email: 'nora@example.com', isActive: true });
   console.log('User gefunden:', userByEmail?.username);
   
-  // Query 2: Aktuelle Food-Einträge eines Users (heute)
+  // heutige food entries
   console.log('\n2. Heutige Food-Einträge für User:');
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -213,7 +206,7 @@ async function appQueries() {
   
   console.log(`Einträge heute: ${todayEntries.length}`);
   
-  // Query 3: Letzte 5 Food-Einträge eines Users
+  // letzte 5 entries
   console.log('\n3. Letzte 5 Food-Einträge:');
   const recentEntries = await FoodEntry.find({ userId: userByEmail?._id })
     .sort({ createdAt: -1 })
@@ -224,7 +217,7 @@ async function appQueries() {
     console.log(`- ${entry.foodText} (${entry.aiAnalysis.calories} kcal) - ${entry.createdAt.toLocaleString()}`);
   });
   
-  // Query 4: Admin Dashboard - Aktive User Count
+  // admin dashboard stats
   console.log('\n4. Admin Dashboard Stats:');
   const stats = await Promise.all([
     User.countDocuments({ isActive: true }),
@@ -234,7 +227,7 @@ async function appQueries() {
   
   console.log(`Dashboard: ${stats[0]} aktive User, ${stats[1]} Food-Einträge, ${stats[2]} offene Tickets`);
   
-  // Query 5: Search User (für Admin)
+  // user search (für admin)
   console.log('\n5. User Search (Admin):');
   const searchResults = await User.find({
     $or: [
@@ -249,21 +242,21 @@ async function appQueries() {
   });
 }
 
-// 5. Performance Tests
+// performance tests
 async function performanceTests() {
   console.log('\n=== PERFORMANCE TESTS ===');
   
-  // Test 1: Einfache Queries
+  // einfache queries
   console.time('Simple User Query');
   await User.find({ isActive: true });
   console.timeEnd('Simple User Query');
   
-  // Test 2: Join Query (populate)
+  // join query (populate)
   console.time('Food Entries with User');
   await FoodEntry.find().populate('userId', 'username');
   console.timeEnd('Food Entries with User');
   
-  // Test 3: Aggregation
+  // aggregation
   console.time('Calories Aggregation');
   await FoodEntry.aggregate([
     { $group: { _id: '$userId', totalCalories: { $sum: '$aiAnalysis.calories' } } }
@@ -271,7 +264,6 @@ async function performanceTests() {
   console.timeEnd('Calories Aggregation');
 }
 
-// === MAIN EXPLORATION FUNCTION ===
 async function exploreDatabase() {
   try {
     await connectDB();
@@ -294,7 +286,7 @@ async function exploreDatabase() {
   }
 }
 
-// Script ausführen
+// script ausführen
 if (require.main === module) {
   exploreDatabase();
 }

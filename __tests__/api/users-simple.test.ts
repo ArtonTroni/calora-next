@@ -35,7 +35,7 @@ describe('Users Database Operations (Simple)', () => {
 
   test('should reject user with too short username', async () => {
     const invalidUser = new User({
-      username: 'ab', // zu kurz
+      username: 'ab', // too short
       email: `short_${Date.now()}@test.com`,
       age: 25,
       gender: 'male',
@@ -47,11 +47,12 @@ describe('Users Database Operations (Simple)', () => {
 
     await expect(invalidUser.save()).rejects.toThrow();
   });
+
 test('should find users by username pattern', async () => {
-    const timestamp = Date.now().toString().slice(-6); // kürzer machen
+    const timestamp = Date.now().toString().slice(-6);
     const users = [
       {
-        username: `s_${timestamp}_a`, // kürzer: s_123456_a (max 10 chars)
+        username: `s_${timestamp}_a`,
         email: `search_a_${timestamp}@test.com`,
         age: 27,
         gender: 'female' as const,
@@ -61,7 +62,7 @@ test('should find users by username pattern', async () => {
         maintenanceCalories: 2100
       },
       {
-        username: `s_${timestamp}_b`, // kürzer: s_123456_b (max 10 chars)
+        username: `s_${timestamp}_b`,
         email: `search_b_${timestamp}@test.com`,
         age: 32,
         gender: 'male' as const,
@@ -76,7 +77,7 @@ test('should find users by username pattern', async () => {
     testUserIds.push(...savedUsers.map(u => u._id.toString()));
 
     const foundUsers = await User.find({
-      username: { $regex: `s_${timestamp}`, $options: 'i' } // angepasste Suche
+      username: { $regex: `s_${timestamp}`, $options: 'i' }
     });
 
     expect(foundUsers.length).toBeGreaterThanOrEqual(2);

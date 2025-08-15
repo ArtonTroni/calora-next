@@ -2,11 +2,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import connectDB from '@/lib/mongodb';
 import { FoodEntry } from '@/models';
 
-// Types für die API
 interface CreateFoodEntryRequest {
   foodText: string;
   meal?: 'breakfast' | 'lunch' | 'dinner' | 'snack';
-  userId?: string; // Später aus Session/Auth
+  userId?: string;
 }
 
 interface FoodEntryResponse {
@@ -32,19 +31,17 @@ interface GetFoodEntriesResponse {
   date?: string;
 }
 
-// Simulierte AI-Analyse (später durch echte KI ersetzen)
+// mock AI - echte API später
 function simulateAIAnalysis(foodText: string) {
-  // Einfache Keyword-basierte Schätzung
   const lowerFood = foodText.toLowerCase();
   
-  let calories = 100; // Default
+  let calories = 100;
   let protein = 5;
   let carbs = 15;
   let fat = 3;
   let sugar = 5;
   let ingredients: string[] = [];
   
-  // Einfache Regeln für Demo
   if (lowerFood.includes('pasta') || lowerFood.includes('nudeln')) {
     calories = 520;
     protein = 18;
@@ -96,7 +93,6 @@ export default async function handler(
     try {
       const { foodText, meal = 'snack', userId }: CreateFoodEntryRequest = req.body;
 
-      // Validation
       if (!foodText || foodText.trim().length === 0) {
         return res.status(400).json({
           error: 'Food text is required',
@@ -111,14 +107,11 @@ export default async function handler(
         });
       }
 
-      // TODO: Get userId from session/authentication
-      // Für jetzt verwenden wir Test-User nora_test
-      const testUserId = '6863c5cd7d97ca5a6769e328'; // nora_test ID
+      // FIXME: hardcoded test user, auth später
+      const testUserId = '6863c5cd7d97ca5a6769e328';
       
-      // AI-Analyse simulieren
       const aiAnalysis = simulateAIAnalysis(foodText);
 
-      // Food Entry in DB speichern
       const foodEntry = new FoodEntry({
         userId: testUserId,
         foodText: foodText.trim(),
@@ -128,7 +121,6 @@ export default async function handler(
 
       const savedEntry = await foodEntry.save();
 
-      // Response formatieren
       const response: FoodEntryResponse = {
         id: savedEntry._id.toString(),
         foodText: savedEntry.foodText,
@@ -152,18 +144,15 @@ export default async function handler(
     try {
       const { userId, date, meal, limit = '50', offset = '0' } = req.query;
 
-      // Query Filter erstellen
       let filter: any = {};
 
-      // User Filter (später aus Session)
       if (userId) {
         filter.userId = userId;
       } else {
-        // nora_test als default
+        // default test user
         filter.userId = '6863c5cd7d97ca5a6769e328';
       }
 
-      // Date Filter
       if (date === 'today') {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -187,22 +176,18 @@ export default async function handler(
         }
       }
 
-      // Meal Filter
       if (meal && meal !== 'all') {
         filter.meal = meal;
       }
 
-      // Food Entries abrufen
       const entries = await FoodEntry.find(filter)
         .sort({ createdAt: -1 })
         .limit(parseInt(limit as string))
         .skip(parseInt(offset as string))
         .lean();
 
-      // Gesamtkalorien berechnen
       const totalCalories = entries.reduce((sum, entry) => sum + entry.aiAnalysis.calories, 0);
 
-      // Response formatieren
       const formattedEntries: FoodEntryResponse[] = entries.map((entry: any) => ({
         id: entry._id.toString(),
         foodText: entry.foodText,
@@ -229,7 +214,6 @@ export default async function handler(
     }
   }
 
-  // Method not allowed
   return res.status(405).json({
     error: 'Method not allowed',
     allowed: ['GET', 'POST']

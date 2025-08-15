@@ -1,10 +1,8 @@
 import type { AppProps } from 'next/app';
 import Link from 'next/link';
 
-// CSS Import
 import '../public/styles.css';
 
-// Navigation Component - Schön aber ohne useRouter
 function Navigation() {
   return (
     <nav className="bg-blue-600 text-white shadow-lg">
@@ -17,7 +15,7 @@ function Navigation() {
             </Link>
           </div>
 
-          {/* Navigation Links - OHNE isActive (das verursachte Hydration-Fehler) */}
+          {/* Navigation Links - ohne isActive (hydration fehler) */}
           <div className="flex items-baseline space-x-4">
             <Link
               href="/maintain"
@@ -46,7 +44,6 @@ function Navigation() {
   );
 }
 
-// Main App Component - Sauberes Layout zurück
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <div className="min-h-screen bg-gray-50">

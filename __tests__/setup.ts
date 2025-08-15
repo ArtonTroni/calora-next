@@ -6,17 +6,17 @@ const MONGODB_TEST_URI = process.env.MONGODB_TEST_URI ||
 beforeAll(async () => {
   if (mongoose.connection.readyState !== 1) {
     await mongoose.connect(MONGODB_TEST_URI);
-    console.log('Connected to test database');
+    console.log('Test DB connected');
   }
 });
 
 afterAll(async () => {
   await mongoose.connection.close();
-  console.log('🔌 Disconnected from test database');
+  console.log('Test DB disconnected');
 });
 
 beforeEach(async () => {
-  // Hier könnte test data cleanup stehen falls nötig
+  // cleanup if needed
 });
 
 jest.setTimeout(10000);
